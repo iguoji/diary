@@ -26,30 +26,30 @@ yum install -y gcc libxml2-devel sqlite3-devel
 ```
 7. 编译配置
 ```
-    * ./configure --prefix=/opt/php --with-config-file-path=/etc --enable-fpm
-    * --prefix 指定安装的目录
-    * --with-config-file-path 指定php.ini配置文件的路径
-    * --enable-fpm 启用fpm支持
+./configure --prefix=/opt/php --with-config-file-path=/etc --enable-fpm
+--prefix 指定安装的目录
+--with-config-file-path 指定php.ini配置文件的路径
+--enable-fpm 启用fpm支持
 ```
-8. 复制php.ini配置文件
+8. 复制php.ini的默认配置文件
 ```
 cp php.ini-production /etc/php.ini
 ```
-9. 复制php-fpm配置文件
+9. 复制php-fpm的默认配置文件
 ```
 cp /opt/php-7.4.4/etc/php-fpm.conf.default /opt/php-7.4.4/etc/php-fpm.conf
 ```
-10. 编辑php-fpm配置文件
+10. 编辑php-fpm的默认配置文件
 ```
 vi /opt/php-7.4.4/etc/php-fpm.conf
 pid=/run/php-fpm.pid
 include=/etc/php-fpm.d/*.conf
 ```
-11. 将php-fpm的配置文件目录复制到/etc下
+11. 将php-fpm的细节配置文件目录复制到/etc下
 ```
 cp etc/php-fpm.d /etc/php-fpm.d
 ```
-12. 将etc/php-fpm.d文件夹下的默认配置文件复制一份
+12. 复制php-fpm的默认细节配置文件
 ```
 cp /etc/php-fpm.d/www.conf.default /etc/php-fpm.d/www.conf
 ```
