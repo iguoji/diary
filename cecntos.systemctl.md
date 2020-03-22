@@ -10,7 +10,7 @@ Before=network-pre.target
 
 [Service]
 # PID文件
-PIDFile=/var/run/php-fpm.pid
+PIDFile=/run/php-fpm.pid
 # 类型 - 后台运行
 Type=forking
 # 启动
