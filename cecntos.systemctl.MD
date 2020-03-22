@@ -1,6 +1,7 @@
 先创建服务文件
 vi /usr/lib/systemd/system/php-fpm.service
 
+```
 [Unit]
 # 描述
 Description=php-fpm - dynamic php-fpm daemon
@@ -26,7 +27,7 @@ PrivateTmp=true
 WantedBy=multi-user.target
 # 别名
 Alias=phpfpm.service
-
+```
 
 最后重新加载systemctl
 systemctl daemon-reload
