@@ -1,5 +1,5 @@
 先创建服务文件
-vi /usr/lib/systemd/system/php-fpm.service
+`vi /usr/lib/systemd/system/php-fpm.service`
 
 ```
 [Unit]
@@ -11,14 +11,14 @@ Before=network-pre.target
 [Service]
 # PID文件
 PIDFile=/var/run/php-fpm.pid
+# 类型 - 后台运行
+Type=forking
 # 启动
 ExecStart=/opt/php-7.4.4/sbin/php-fpm
 # 重载
 ExecReload=/bin/kill -USR2 $MAINPID
 # 停止
 ExecStop=/bin/kill -INT $MAINPID
-# 重启
-ExecRestart=/bin/kill -USR2 $MAINPID
 # 分配私有空间
 PrivateTmp=true
 
@@ -30,4 +30,4 @@ Alias=phpfpm.service
 ```
 
 最后重新加载systemctl
-systemctl daemon-reload
+`systemctl daemon-reload`
