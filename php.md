@@ -11,12 +11,12 @@ tar -xvf php-7.4.4.tar.gz -C /home
 5. 进入php文件夹
 cd /home/php-7.4.4
 6. 安装编译需要的环境
-  * yum install -y gcc libxml2-devel sqlite3-devel
+    * yum install -y gcc libxml2-devel sqlite3-devel
 7. 编译配置
-  * ./configure --prefix=/opt/php --with-config-file-path=/etc --enable-fpm
-  * --prefix 指定安装的目录
-  * --with-config-file-path 指定php.ini配置文件的路径
-  * --enable-fpm 启用fpm支持
+    * ./configure --prefix=/opt/php --with-config-file-path=/etc --enable-fpm
+    * --prefix 指定安装的目录
+    * --with-config-file-path 指定php.ini配置文件的路径
+    * --enable-fpm 启用fpm支持
 8. 复制php.ini配置文件
 cp php.ini-production /etc/php.ini
 9. 复制php-fpm配置文件
