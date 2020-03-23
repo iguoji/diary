@@ -6,12 +6,11 @@
 
 ```
 [Unit]
-# 描述
 Description=The PHP FastCGI Process Manager
 After=network.target
 
 [Service]
-# PID文件
+# pid文件在/etc/php-fpm.conf中设置
 PIDFile=/run/php-fpm.pid
 Type=forking
 ExecStart=/opt/php-7.4.4/sbin/php-fpm
