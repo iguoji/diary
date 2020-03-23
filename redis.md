@@ -17,8 +17,12 @@ vi /etc/redis.conf
 
 # Redis服务器地址，只能通过这个地址进行访问，建议填写内网IP
 bind 192.168.1.168
+# 是否只能内网访问
+protected-mode no
 # 后台运行
 daemonize yes
+# 密码
+requirepass 123456
 ```
 4. 环境变量(放在最后一行)
 ```
