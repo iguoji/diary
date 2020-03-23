@@ -22,13 +22,11 @@ cp php.ini-production /etc/php.ini
 ```
 4. php-fpm.conf
 ```
-cp /opt/php-7.4.4/etc/php-fpm.conf.default /opt/php-7.4.4/etc/php-fpm.conf
-vi /opt/php-7.4.4/etc/php-fpm.conf
+mv /etc/php-fpm.conf.default /etc/php-fpm.conf
+vi /etc/php-fpm.conf
 pid=/run/php-fpm.pid
-include=/etc/php-fpm.d/*.conf
 ```
 5. php-fpm.d
 ```
-cp etc/php-fpm.d /etc/php-fpm.d
-cp /etc/php-fpm.d/www.conf.default /etc/php-fpm.d/www.conf
+mv /etc/php-fpm.d/www.conf.default /etc/php-fpm.d/www.conf
 ```
