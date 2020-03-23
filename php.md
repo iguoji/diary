@@ -39,5 +39,5 @@ PHP=/opt/php-7.4.4
 PATH=$PATH:$PHP/bin:$PHP/sbin
 export PATH
 
-
+source profile
 ```
