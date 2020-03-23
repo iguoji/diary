@@ -4,7 +4,7 @@
 ```
 mkdir /home/download
 cd /home/download
-wget https://www.php.net/distributions/php-7.4.4.tar.gz
+curl -O https://www.php.net/distributions/php-7.4.4.tar.gz
 tar -xvf php-7.4.4.tar.gz -C /home
 cd /home/php-7.4.4
 ```
