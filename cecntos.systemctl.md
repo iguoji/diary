@@ -1,3 +1,4 @@
+## PHP.service
 先创建服务文件
 `vi /usr/lib/systemd/system/php-fpm.service`
 
@@ -31,3 +32,5 @@ Alias=phpfpm.service
 
 最后重新加载systemctl
 `systemctl daemon-reload`
+
+## Redis.service
