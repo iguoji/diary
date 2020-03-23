@@ -10,7 +10,7 @@ cd /home/php-7.4.4
 ```
 2. 编译安装
 ```
-yum install -y gcc libxml2-devel sqlite3-devel
+yum install -y gcc libxml2-devel sqlite-devel
 ./configure --prefix=/opt/php --with-config-file-path=/etc --sysconfdir=/etc --enable-fpm 
 --prefix 指定安装的目录
 --with-config-file-path 指定php.ini配置文件的路径
