@@ -30,14 +30,17 @@ pid=/run/php-fpm.pid
 ```
 mv /etc/php-fpm.d/www.conf.default /etc/php-fpm.d/www.conf
 ```
-6. 环境变量
+6. 环境变量(放在最后一行)
 ```
 vi /etc/profile
 
-# 这一段放在最底部，自己添加的环境变量
+# PHP
 PHP=/opt/php-7.4.4
 PATH=$PATH:$PHP/bin:$PHP/sbin
+
+# 导出变量
 export PATH
 
 source profile
 ```
+7. [Systemctl.Service](cecntos.systemctl.md)
