@@ -33,4 +33,4 @@ export PATH
 
 source /etc/profile
 ```
-5. [Systemctl.Service](centos.systemctl.md)
+5. [Systemctl.Service](cecntos.systemctl.md)
