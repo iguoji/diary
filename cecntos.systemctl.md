@@ -34,3 +34,26 @@ Alias=phpfpm.service
 `systemctl daemon-reload`
 
 ## Redis.service
+先创建服务文件
+`vi /usr/lib/systemd/system/redis.service`
+
+```
+[Unit]
+Description=redis - cache server
+After=network-online.target remote-fs.target
+Wants=network-online.target
+
+[Service]
+Type=forking
+# pid文件在/etc/redis.conf中设置
+PIDFile=/var/run/redis_6379.pid
+ExecStart=/opt/redis-5.0.8/bin/redis-server /etc/redis.conf
+ExecReload=/bin/kill -s HUP $MAINPID
+ExecStop=/bin/kill -s QUIT $MAINPID
+
+[Install]
+WantedBy=multi-user.target
+```
+
+最后重新加载systemctl
+`systemctl daemon-reload`
