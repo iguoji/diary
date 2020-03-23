@@ -8,5 +8,7 @@
 [pecl](php.pecl.md)
 ## redis
 [redis编译安装](redis.md)
+## mariadb
+[mariadb安装](mariadb.md)
 ## centos
 [systemctl](cecntos.systemctl.md)
