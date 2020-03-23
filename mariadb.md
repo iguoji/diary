@@ -27,17 +27,20 @@ mysql_secure_installation
     * `Remove test database and access to it? [Y/n]` 是否删除测试数据库和账号，回车
     * `Reload privilege tables now? [Y/n]` 重新载入权限设置，回车
     
-5. 测试一下
+5. 远程链接
 ```
 mysql -h 127.0.0.1 -u root -p
 123456
-MariaDB [(none)]> show databases;
-+--------------------+
-| Database           |
-+--------------------+
-| information_schema |
-| mysql              |
-| performance_schema |
-+--------------------+
+MariaDB [(none)]> use mysql;
+MariaDB [mysql]> grant all privileges on *.* to 'root'@'%' identified by '123456';
+MariaDB [mysql]> flush privileges;
+MariaDB [mysql]> select user,host from user;
++-------+-----------+
+| User  | Host      |
++-------+-----------+
+| root  | %         |
+| mysql | localhost |
+| root  | localhost |
++-------+-----------+
 3 rows in set (0.001 sec)
 ```
