@@ -10,7 +10,7 @@ cd /home/php-7.4.4
 ```
 2. 编译安装
 ```
-yum install -y gcc libxml2-devel sqlite-devel
+yum install -y gcc libxml2-devel sqlite-devel systemd-devel
 ./configure --help
 ./configure --prefix=/opt/php --with-config-file-path=/etc --sysconfdir=/etc --enable-fpm --with-fpm-systemd --with-openssl --with-curl --enable-mbstring && make install
 --prefix 指定安装的目录
