@@ -11,10 +11,15 @@ cd /home/php-7.4.4
 2. 编译安装
 ```
 yum install -y gcc libxml2-devel sqlite-devel
-./configure --prefix=/opt/php --with-config-file-path=/etc --sysconfdir=/etc --enable-fpm && make install
+./configure --help
+./configure --prefix=/opt/php --with-config-file-path=/etc --sysconfdir=/etc --enable-fpm --with-fpm-systemd --with-openssl --with-curl --enable-mbstring && make install
 --prefix 指定安装的目录
 --with-config-file-path 指定php.ini配置文件的路径
 --enable-fpm 启用fpm支持
+--with-fpm-systemd 启用systemctl服务支持
+--with-openssl 启用openssl
+--with-curl 启用curl
+--enable-mbstring 支持mb系列函数
 ```
 3. php.ini
 ```
