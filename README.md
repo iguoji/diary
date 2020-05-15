@@ -138,6 +138,9 @@ systemctl restart php-fpm
     ```
 
 #### redis扩展
+
+通过 `pecl` 安装
+
 ```bash
 pecl install redis
 
@@ -148,6 +151,15 @@ extension=redis.so
 ```
 
 #### swoole扩展
+
+通过 `pecl` 安装
+
+```bash
+pecl install redis
+```
+
+编译安装
+
 ```bash
 dnf install -y gcc-c++
 mkdir /home/download && cd /home/download
@@ -187,7 +199,7 @@ make PREFIX=/opt/redis-5.0.8 install
 #### 环境配置
 * redis.conf
     ```bash
-    cp /home/download/redis.conf /etc/redis.conf
+    cp /home/download/redis-5.0.8/redis.conf /etc/redis.conf
 
     vi /etc/redis.conf
 
@@ -245,6 +257,15 @@ systemctl restart redis
 
     source /etc/profile
     ```
+
+### Composer
+
+```bash
+php -r "copy('https://install.phpcomposer.com/installer', 'composer-setup.php');"
+php composer-setup.php
+mv composer.phar /usr/local/bin/composer
+composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/
+```
 
 ### Mariadb
 

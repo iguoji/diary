@@ -11,13 +11,14 @@ php_url="http://192.168.2.20/"
 
 
 # 显示主菜单
-showMenus(){
+hello(){
     echo '===================================='
     for((i=0;i<${#menus[*]};i++));do
         echo "($i) ${menus[i]}"
     done;
     echo '===================================='
     read -p "Please Input Your Choose：" index
+    return $index
 }
 
 # PHP
@@ -26,7 +27,7 @@ php(){
     read -p "version：" php_version
     if [ ${#php_version} -lt 2 ]
     then
-
+        echo "hello"
     fi
     read -p "php bin path：" php_path
     read -p "php ini path：" php_ini_path
@@ -56,8 +57,9 @@ php(){
 }
 
 # 菜单询问
-while showMenus
+while :
 do
+    read -p "hee" aaa
     case $index in
         0)
             echo "All"
@@ -66,8 +68,7 @@ do
             echo "Nginx"
         ;;
         2)
-
-            php
+            echo "php"
         ;;
         3)
             echo "MariaDB"
