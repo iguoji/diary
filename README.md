@@ -66,8 +66,8 @@ systemctl restart docker
 #### 下载PHP
 ```bash
 mkdir /home/download && cd /home/download
-curl -O https://www.php.net/distributions/php-7.4.5.tar.gz
-tar -xvf php-7.4.5.tar.gz
+curl -O http://mirrors.sohu.com/php/php-7.4.6.tar.gz
+tar -xvf php-7.4.6.tar.gz
 ```
 #### 安装依赖
 > [oniguruma](https://github.com/kkos/oniguruma) 是mbstring所需的依赖
@@ -83,21 +83,38 @@ dnf install -y autoconf automake libtool make
 #### 编译安装
 > 可通过 ./configure --help 查看选项
 ```bash
-cd /home/download/php-7.4.5
-./configure --prefix=/opt/php-7.4.5 --with-config-file-path=/etc --sysconfdir=/etc --enable-fpm --with-fpm-systemd --with-openssl --with-curl --enable-mbstring && make install
+cd /home/download/php-7.4.6
+./configure \
+    --prefix=/opt/php-7.4.6 \
+    --with-config-file-path=/etc \
+    --with-config-file-scan-dir=/etc/php.d \
+    --sysconfdir=/etc \
+    --with-libdir=lib64 \
+    --enable-fpm \
+    --with-fpm-systemd \
+    --with-openssl \
+    --with-curl \
+    --enable-mbstring \
+    --with-pdo-mysql \
+    --with-zlib-dir \
+    --with-pear
+make && make install
 ```
 * `--prefix` 指定安装的目录
 * `--with-config-file-path` 指定php.ini配置文件的路径
+* `--with-config-file-scan-dir` 扩展的配置信息可以放这里
+* `--with-libdir` 64位系统最好加上
 * `--enable-fpm` 启用fpm支持
 * `--with-fpm-systemd` 启用systemctl服务支持
 * `--with-openssl` 启用openssl
 * `--with-curl` 启用curl
 * `--enable-mbstring` 支持mb系列函数
+* `--with-pdo-mysql` 对mysql的支持，最好加上，后期安装常常会有各种意外
 
 #### 环境配置
 * php.ini
 ```bash
-cp /home/download/php-7.4.5/php.ini-production /etc/php.ini
+cp /home/download/php-7.4.6/php.ini-production /etc/php.ini
 ```
 * php-fpm.conf
 ```bash
@@ -111,7 +128,7 @@ mv /etc/php-fpm.d/www.conf.default /etc/php-fpm.d/www.conf
 ```
 * 系统服务
 ```bash
-cp /home/download/php-7.4.5/sapi/fpm/php-fpm.service /usr/lib/systemd/system/php-fpm.service
+cp /home/download/php-7.4.6/sapi/fpm/php-fpm.service /usr/lib/systemd/system/php-fpm.service
 systemctl daemon-reload
 ```
 * 开机启动
@@ -128,7 +145,7 @@ systemctl restart php-fpm
     vi /etc/profile
 
     # PHP
-    PHP=/opt/php-7.4.5
+    PHP=/opt/php-7.4.6
     PATH=$PATH:$PHP/bin:$PHP/sbin
 
     # 导出变量
@@ -137,6 +154,16 @@ systemctl restart php-fpm
     source /etc/profile
     ```
 
+#### 编译安装扩展
+
+首先进入扩展的源代码文件夹，接下来
+
+第一步： `phpize`
+
+第二步： `./configure --其他选项`
+
+第三步： `make && make install`
+
 #### redis扩展
 
 通过 `pecl` 安装
@@ -144,7 +171,7 @@ systemctl restart php-fpm
 ```bash
 pecl install redis
 
-vi /etc/php.ini
+vi /etc/php.d/redis.ini
 
 [redis]
 extension=redis.so
@@ -163,12 +190,12 @@ pecl install redis
 ```bash
 dnf install -y gcc-c++
 mkdir /home/download && cd /home/download
-curl -LO https://github.com/swoole/swoole-src/archive/v4.4.17.tar.gz
-tar xvf v4.4.17.tar.gz
-cd swoole-src-4.4.17
+curl -LO https://github.com/swoole/swoole-src/archive/v4.5.2.tar.gz
+tar xvf v4.5.2.tar.gz
+cd swoole-src-4.5.2
 phpize
-./configure && make && make install
-vi /etc/php.ini
+./configure --enable-openssl --enable-http2 && make && make install
+vi /etc/php.d/swoole.ini
 [swoole]
 extension=swoole.so
 ```
@@ -290,6 +317,26 @@ mysql_secure_installation
 * `Disallow root login remotely? [Y/n]` 是否禁止root用户远程登录，输入`n`后回车
 * `Remove test database and access to it? [Y/n]` 是否删除测试数据库和账号，回车
 * `Reload privilege tables now? [Y/n]` 重新载入权限设置，回车
+
+常见问题
+
+* 授权远程用户
+
+```sql
+grant all privileges on *.* to 'root'@'%' identified by '123456'
+```
+
+* 配置文件调整 `/etc/my.cnf.d/server.cnf`
+
+```ini
+[mysqld]
+# 跳过DNS反解析
+skip-name-resolve
+
+[galera]
+# 设置Mysql的IP
+bind-address=0.0.0.0
+```
 
 ### Nginx
 
