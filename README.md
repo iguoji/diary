@@ -7,10 +7,59 @@ curl -LO http://url/file.tar.gz
 ```
 #### 解压文件
 ```bash
-tar -xvf file.tar.gz
+tar -xf file.tar.gz
+```
+#### Win10通过SCP发送文件到Centos
+
+```bash
+# Windows PowerShell命令行
+scp .\onig-6.9.5.tar.gz root@192.168.2.11:/home/download
 ```
 
 ## Centos8
+
+### 网络设置
+
+#### IP设置
+
+```bash
+cat /etc/sysconfig/network-scripts/ifcfg-ens33
+```
+
+```bash
+TYPE="Ethernet"
+PROXY_METHOD="none"
+BROWSER_ONLY="no"
+BOOTPROTO="none"
+DEFROUTE="yes"
+IPV4_FAILURE_FATAL="no"
+IPV6INIT="yes"
+IPV6_AUTOCONF="yes"
+IPV6_DEFROUTE="yes"
+IPV6_FAILURE_FATAL="no"
+IPV6_ADDR_GEN_MODE="stable-privacy"
+NAME="ens33"
+UUID="1680e673-1517-4df3-9921-4eef4f78d65c"
+DEVICE="ens33"
+ONBOOT="yes"
+# 重点是下面四行
+IPADDR="192.168.2.11"
+PREFIX="24"
+GATEWAY="192.168.2.2"
+NDS1="192.168.2.2"
+IPV6_PRIVACY="no"
+```
+
+#### 设置DNS服务器
+
+```bash
+vi /etc/resolv.conf
+```
+```bash
+# 和上面保持一致
+nameserver 192.168.2.2
+```
+
 ### 软件源
 ```bash
 mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup
@@ -67,7 +116,7 @@ systemctl restart docker
 ```bash
 mkdir /home/download && cd /home/download
 curl -O http://mirrors.sohu.com/php/php-7.4.6.tar.gz
-tar -xvf php-7.4.6.tar.gz
+tar -xf php-7.4.6.tar.gz
 ```
 #### 安装依赖
 > [oniguruma](https://github.com/kkos/oniguruma) 是mbstring所需的依赖
@@ -75,7 +124,7 @@ tar -xvf php-7.4.6.tar.gz
 dnf install -y gcc systemd-devel libxml2-devel openssl-devel sqlite-devel libcurl-devel
 cd /home/download
 curl -LO https://github.com/kkos/oniguruma/releases/download/v6.9.5/onig-6.9.5.tar.gz
-tar -xvf onig-6.9.5.tar.gz
+tar -xf onig-6.9.5.tar.gz
 cd onig-6.9.5
 dnf install -y autoconf automake libtool make
 ./configure --prefix=/opt/oniguruma --libdir=/lib64 && make install
@@ -179,19 +228,20 @@ extension=redis.so
 
 #### swoole扩展
 
+前置需求：`dnf install -y gcc-c++`
+
 通过 `pecl` 安装
 
 ```bash
-pecl install redis
+pecl install swoole
 ```
 
 编译安装
 
 ```bash
-dnf install -y gcc-c++
 mkdir /home/download && cd /home/download
 curl -LO https://github.com/swoole/swoole-src/archive/v4.5.2.tar.gz
-tar xvf v4.5.2.tar.gz
+tar xf v4.5.2.tar.gz
 cd swoole-src-4.5.2
 phpize
 ./configure --enable-openssl --enable-http2 && make && make install
@@ -211,12 +261,20 @@ php go-pear.phar
 
 通过 `pecl install` 安装非常慢，可以先把 `tgz` 下载下来后再执行 `pecl install file.tgz`
 
+#### 自动配置php.ini
+
+```bash
+pear config-set php_ini /etc/php.ini
+```
+
+PS：每次安装扩展后需要手动重启`php-fpm`服务，这样`extension=xxx.so`才会自动加入`php.ini`里
+
 ### Redis
 #### 下载redis
 ```bash
 mkdir /home/download && cd /home/download
 curl -LO http://download.redis.io/releases/redis-5.0.8.tar.gz
-tar -xvf redis-5.0.8.tar.gz
+tar -xf redis-5.0.8.tar.gz
 ```
 #### 编译安装
 ```bash
@@ -323,7 +381,8 @@ mysql_secure_installation
 * 授权远程用户
 
 ```sql
-grant all privileges on *.* to 'root'@'%' identified by '123456'
+grant all privileges on *.* to 'root'@'%' identified by '123456';
+flush privileges;
 ```
 
 * 配置文件调整 `/etc/my.cnf.d/server.cnf`
