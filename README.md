@@ -109,8 +109,20 @@ firewall-cmd --reload
 systemctl restart docker
 ```
 
+### PHP 8
 
-### PHP
+#### 下载安装
+
+```bash
+# 进入下载文件夹目录
+cd /home/download
+# 下载PHP
+curl -LO https://downloads.php.net/~pollita/php-8.0.0beta2.tar.gz
+# 解压PHP
+tar -xf php-8.0.0beta2.tar.gz
+```
+
+### PHP 7.4.6
 > PHP编译安装问题大部分出现在缺少依赖，当某些依赖通过dnf或yum搜索不到时就很头疼
 #### 下载PHP
 ```bash
@@ -423,6 +435,37 @@ module_hotfixes=true
 
 dnf install -y nginx
 ```
+## 系统调优
+
+### Centos
+
+ 1. ulimit
+
+    系统资源设置，通常回设置可打开文件最大数量
+
+    通过 `ulimit -a` 可以查看到相关数据
+
+    通过 `ulimit -n 100000` 可以进行设置文件数量（本次启动有效）
+
+### PHP
+
+ 1. memory_limit
+
+    PHP脚本内存空间大小
+
+    memory_limit = 1024M，建议设置大点，不然内存泄漏的BUG很快就会被发现
+
+### Mysql
+
+ 1. innodb_flush_log_at_trx_commit
+
+    提交事务时日志写入磁盘的策略选择
+
+    0：延迟写，最快、最不安全
+
+    1：实时写，实时刷（默认），最慢
+
+    2：实时写，延迟刷，折中，（大多数推荐）
 
 ## 历史文章
 * nginx
