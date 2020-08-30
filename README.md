@@ -122,6 +122,10 @@ curl -LO https://downloads.php.net/~pollita/php-8.0.0beta2.tar.gz
 tar -xf php-8.0.0beta2.tar.gz
 ```
 
+#### 编译参考
+
+[点击这里](php.configure.md)
+
 ### PHP 7.4.6
 > PHP编译安装问题大部分出现在缺少依赖，当某些依赖通过dnf或yum搜索不到时就很头疼
 #### 下载PHP
