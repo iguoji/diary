@@ -1,23 +1,50 @@
 [返回主页](../../../README.md)
 
-#### 更换DNF软件源
+#### 软件源
+
 ```bash
+# 备份
 mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup
+# 使用阿里云的软件源
 curl -o /etc/yum.repos.d/CentOS-Base.repo https://mirrors.aliyun.com/repo/Centos-8.repo
+# 清除缓存
 dnf makecache
 ```
-#### 下载解压PHP
+
+#### 防火墙
+
+```bash
+# 禁用防火墙
+systemctl stop firewalld
+systemctl disable firewalld
+```
+
+#### Selinux
+
+```bash
+# 临时关闭
+setenforce 0
+
+# 永久关闭
+vi /etc/selinux/config
+# 将SELINUX=enforcing改成，完了重启
+SELINUX=disabled
+```
+
+#### PHP
+
+##### 下载解压
 ```bash
 mkdir /home/download && cd /home/download
 curl -LO https://downloads.php.net/~pollita/php-8.0.0beta2.tar.gz
 tar -xf php-8.0.0beta2.tar.gz
 cd php-8.0.0beta2
 ```
-#### PHP的编译依赖工具
+##### 安装依赖
 ```bash
 dnf install -y autoconf automake libtool libxml2-devel openssl-devel libcurl-devel libpng-devel libjpeg-devel freetype-devel gmp-devel
 ```
-#### 编译安装PHP
+##### 编译安装
 ```bash
 ./configure \
     --prefix=/opt/php-8.0.0beta2 \
@@ -42,7 +69,7 @@ dnf install -y autoconf automake libtool libxml2-devel openssl-devel libcurl-dev
 make && make install
 ```
 
-#### 安装结果
+##### 查看结果
 ```bash
 Build complete.
 Don't forget to run 'make test'.
@@ -88,37 +115,37 @@ ln -s -f phar.phar /opt/php-8.0.0beta2/bin/phar
 Installing PDO headers:           /opt/php-8.0.0beta2/include/php/ext/pdo/
 ```
 
-#### 环境变量
+##### 初步准备
 
 ```bash
+# 编辑环境变量
 vi /etc/profile
 
 # 在末尾追加以下内容
 # PHP
 PHP=/opt/php-8.0.0beta2/
 PATH=$PATH:$PHP/bin:$PHP/sbin
-
 # 导出变量
 export PATH
 
 # 重新加载环境变量，以便立即生效
 source /etc/profile
-```
 
-#### php.ini
-
-```bash
+# php.ini
 cp /home/download/php-8.0.0beta2/php.ini-production /opt/php-8.0.0beta2/etc/php.ini
+# php.d/
 mkdir /opt/php-8.0.0beta2/etc/php.d
-```
 
-#### php-fpm.ini
-
-```bash
+# php-fpm 配置文件
 mv /opt/php-8.0.0beta2/etc/php-fpm.conf.default /opt/php-8.0.0beta2/etc/php-fpm.conf
+mv /opt/php-8.0.0beta2/etc/php-fpm.d/www.conf.default /opt/php-8.0.0beta2/etc/php-fpm.d/www.conf
+
+# systemctl 服务
+cp /home/download/php-8.0.0beta2/sapi/fpm/php-fpm.service /usr/lib/systemd/system/php-fpm.service
+systemctl daemon-reload
 ```
 
-#### 常见错误
+##### 常见错误
 
 + configure error: Package requirements (libxml-2.0 >= 2.9.0) were not met
 
@@ -220,4 +247,32 @@ tar -xf onig-6.9.5_rev1.tar.gz
 cd onig-6.9.5
 ./configure && make && make install
 export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig/
+```
+
+#### Nginx
+
+##### 快速安装
+```bash
+# 编辑源文件
+vi /etc/yum.repos.d/nginx.repo
+
+# 粘贴以下内容
+[nginx-stable]
+name=nginx stable repo
+baseurl=http://nginx.org/packages/centos/$releasever/$basearch/
+gpgcheck=1
+enabled=1
+gpgkey=https://nginx.org/keys/nginx_signing.key
+module_hotfixes=true
+
+[nginx-mainline]
+name=nginx mainline repo
+baseurl=http://nginx.org/packages/mainline/centos/$releasever/$basearch/
+gpgcheck=1
+enabled=0
+gpgkey=https://nginx.org/keys/nginx_signing.key
+module_hotfixes=true
+
+# 执行安装
+dmf install -y nginx
 ```
