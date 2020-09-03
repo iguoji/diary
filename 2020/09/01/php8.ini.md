@@ -616,3 +616,293 @@ PHP会使用该环境变量名称来确定是否可以继续执行。
 如果脚本支持既作为独立脚本又通过PHP CGI运行，则可能需要此行。
 
 如果启用了此伪指令，则处于CGI模式的PHP将跳过此行，并忽略其内容。
+
+## 文件上传
+
+### file_uploads
+
+默认值：`file_uploads = On`，是否允许Http上传文件
+
+### upload_tmp_dir
+
+默认值：`upload_tmp_dir = `，上传文件时临时存放目录，需保证有读写权限
+
+### upload_max_filesize
+
+默认值：`upload_max_filesize = 2M`，上传时单个文件允许最大的文件大小
+
+### max_file_uploads
+
+默认值：`max_file_uploads = 20`，一次请求最多上传多少个文件
+
+## Fopen wrappers
+
+### allow_url_fopen
+
+默认值：`allow_url_fopen = On`，是否允许 `fopen()`这类函数以 URL形式的参数 打开远程对象
+
+### allow_url_include
+
+默认值：`allow_url_include = Off`，是否允许 `require`、`include` 等函数以 URL形式的参数 打开远程对象
+
+### from
+
+默认值：`from = `，匿名FTP的密码，邮箱格式
+
+### user_agent
+
+默认值：`user_agent = `，各类请求中，PHP默认发送的 `User-Agent`。
+
+### default_socket_timeout
+
+默认值：`default_socket_timeout = 60`，基于 socket 的流的默认超时时间（秒）。
+
+### auto_detect_line_endings
+
+默认值：`auto_detect_line_endings = Off`
+
+当设为 On 时，PHP 将检查通过 fgets() 和 file() 取得的数据中的行结束符号是符合 Unix，MS-DOS，还是 Macintosh 的习惯。
+
+这使得 PHP 可以和 Macintosh 系统交互操作，但是默认值是 Off，因为在检测第一行的 EOL 习惯时会有很小的性能损失，而且在 Unix 系统下使用回车符号作为项目分隔符的人们会遭遇向下不兼容的行为。
+
+## 动态扩展
+
+### extension
+
+没有默认值，目的是添加扩展模块，例如 `extension=redis`，添加多个扩展的话，就复制一行一个
+
+### zend_extension
+
+如上
+
+## 模块设置
+
+### Cli Server
+
+#### cli_server.color
+
+默认值：`cli_server.color = On`，控制内置Web Server的终端输出有无颜色。
+
+### Date
+
+#### date.timezone
+
+默认值：`date.timezone = `，用于所有日期、时间函数的默认时区，也可以通过 `date_default_timezone_set()` 来设置
+
+#### date.default_latitude
+
+默认值：`date.default_latitude = 31.7667`，默认纬度。
+
+#### date.default_longitude
+
+默认值：`date.default_longitude = 35.2333`，默认经度。
+
+#### date.sunrise_zenith
+
+默认值：`date.sunrise_zenith = 90.833333`，默认日出天顶。
+
+#### date.sunset_zenith
+
+默认值：`date.sunset_zenith = 90.833333`，默认日落天顶。
+
+### filter
+
+#### filter.default
+
+默认值：`filter.default = unsafe_raw`
+
+用于过滤所有来自 `$_GET`、`$_POST`、`$_COOKIE`、`$_REQUEST`、`$_SERVER` 的变量数据
+
+可接受的值参考[官网](https://www.php.net/manual/zh/filter.filters.php)，如果要获取原始值可通过 [`filter_input()`](https://www.php.net/manual/zh/function.filter-input.php) 函数
+
+#### filter.default_flags
+
+默认值：`filter.default_flags = `，可选值参考[官网](https://www.php.net/manual/zh/filter.filters.flags.php)，没搞懂
+
+### opcache
+
+#### opcache.enable
+
+默认值：`opcache.enable=1`，确定是否启用 `OPcache`。
+
+#### opcache.enable_cli
+
+默认值：`opcache.enable_cli=0`，确定是否在CLI模式下启用 `OPcache`。
+
+#### opcache.memory_consumption
+
+默认值：`opcache.memory_consumption=128`，设置共享内存的容量（单位M）。
+
+#### opcache.interned_strings_buffer
+
+默认值：`opcache.interned_strings_buffer=8`，设置用来存储预留字符串的内存容量（单位M）。
+
+#### opcache.max_accelerated_files
+
+默认值：`opcache.max_accelerated_files=10000`，内置哈希表，最大可存储脚本数量的上限，可设置 `200` 到 `1000000` 之间。
+
+#### opcache.max_wasted_percentage
+
+默认值：`opcache.max_wasted_percentage=5`，最多可浪费多少百分比的内存，达到此数值将执行重启。
+
+#### opcache.use_cwd
+
+默认值：`opcache.use_cwd=1`，每个PHP脚本存储时是否附带上所在目录，不带目录则略微增加性能但有可能造成重名脚本冲突的意外情况。
+
+#### opcache.validate_timestamps
+
+默认值：`opcache.validate_timestamps=1`，如果启用，那么 `OPcache` 会每隔 `opcache.revalidate_freq` 设定的秒数来检查脚本是否更新缓存。
+
+#### opcache.revalidate_freq
+
+默认值：`opcache.revalidate_freq=2`，配合 `validate_timestamps` 使用，每隔若干秒检查一次
+
+#### opcache.revalidate_path
+
+默认值：`opcache.revalidate_path=0`
+
+说法一：**php.ini**：在优化 `include_path` 时启用或禁用文件搜索。
+
+说法二：**官网文档**：如果禁用此选项，在同一个 `include_path` 已存在的缓存文件会被重用。 因此，将无法找到不在包含路径下的同名文件。
+
+这两处说法没太看懂，感觉有点矛盾，但网上资料大多是建议设置为 `0`。
+
+#### opcache.save_comments
+
+默认值：`opcache.save_comments=1`，是否在编译的缓存文件中保存注释。
+
+#### opcache.record_warnings
+
+默认值：`opcache.record_warnings=0`，是否每次包含文件时都发出警告通知。
+
+#### opcache.enable_file_override
+
+默认值：`opcache.enable_file_override=0`
+
+如果启用，则在调用函数 `file_exists()`、`is_file()`、`is_readable()`的时候会先去检查缓存，无论文件是否已经被缓存。
+
+#### opcache.optimization_level
+
+默认值：`opcache.optimization_level=0x7FFFBFFF`，控制优化级别的二进制位掩码。
+
+#### opcache.dups_fix
+
+默认值：`opcache.dups_fix=0`，启用后将解决重复定义类的错误问题。
+
+例如重复 `include("myClass.php")` 多次引入相同文件，就会报错，但启用该选项就可以暂时避免。
+
+#### opcache.blacklist_filename
+
+默认值：`opcache.blacklist_filename=`
+
+黑名单文本文件的路径，该文本文件中存放不用进行预编译的文件列表
+
+#### opcache.max_file_size
+
+默认值：`opcache.max_file_size=0`，可允许编译后文件的最大字节数，为`0`表示随便编译。
+
+#### opcache.consistency_checks
+
+默认值：`opcache.consistency_checks=0`
+
+如果是非 `0` 值，OPcache 将会每隔 `N` 次请求检查缓存校验和。 `N` 即为此配置指令的设置值。
+
+由于此选项对于性能有较大影响，请尽在调试环境使用。
+
+#### opcache.force_restart_timeout
+
+默认值：`opcache.force_restart_timeout=180`，没事的时候，等待多少秒将会自动重启。
+
+#### opcache.error_log
+
+默认值：`opcache.error_log=`，错误日志文件路径，为空则表示发送到 `stderr`，即 `php-fpm` 或 `nginx` 的错误日志文件中。
+
+#### opcache.log_verbosity_level
+
+默认值：`opcache.log_verbosity_level=1`，OPcache 模块的日志级别。
+
+默认情况下，仅有致命级别（0）及错误级别（1）的日志会被记录。
+
+其他可用的级别有：警告（2），信息（3）和调试（4）。
+
+#### opcache.preferred_memory_model
+
+默认值：`opcache.preferred_memory_model=`，OPcache 首选的内存模块。
+
+如果留空，OPcache 会选择适用的模块， 通常情况下，自动选择就可以满足需求。
+
+可选值包括： `mmap`，`shm`, `posix` 以及 `win32`。
+
+#### opcache.protect_memory
+
+默认值：`opcache.protect_memory=0`，内部调试时用的，保护共享内存，以避免执行脚本时发生非预期的写入。
+
+#### opcache.restrict_api
+
+默认值：`opcache.restrict_api=`，允许指定路径下的PHP文件调用 `opcache` 的函数，留空表示不做限制。
+
+#### opcache.mmap_base
+
+默认值：`opcache.mmap_base=`，在 Windows 平台上共享内存段的基地址。
+
+所有的 PHP 进程都将共享内存映射到同样的地址空间。 使用此配置指令避免“无法重新附加到基地址”的错误。
+
+#### opcache.cache_id
+
+默认值：`opcache.cache_id=`
+
+为每个用户提供多个OPcache实例（仅适用于Windows）。 具有相同缓存ID和用户的所有PHP进程共享一个OPcache实例。
+
+#### opcache.file_cache
+
+默认值：`opcache.file_cache=`，填写一个目录地址启用文件缓存，留空表示禁用基于文件的缓存。
+
+#### opcache.file_cache_only
+
+默认值：`opcache.file_cache_only=0`，启用则禁用基于内存的缓存。
+
+#### opcache.file_cache_consistency_checks
+
+默认值：`opcache.file_cache_consistency_checks=1`，当从文件缓存中加载脚本的时候，是否对文件的校验和进行验证。
+
+#### opcache.file_cache_fallback
+
+默认值：`opcache.file_cache_fallback=0`，在 Windows 平台上，当一个进程无法附加到共享内存的时候， 是否使用基于文件的缓存。
+
+#### opcache.huge_code_pages
+
+默认值：`opcache.huge_code_pages=0`，是否将缓存复制到`HUGE PAGES`，启用则可提高性能，但是需要对系统进行配置。
+
+#### opcache.validate_permission
+
+默认值：`opcache.validate_permission=0`，是否针对当前用户，验证缓存文件的访问权限。
+
+#### opcache.validate_root
+
+默认值：`opcache.validate_root=0`，是否启用以防止在`chroot`环境中发生名称冲突。
+
+#### opcache.opt_debug_level
+
+默认值：`opcache.opt_debug_level=0`，针对不同阶段的优化情况进行调试。
+
+设置为 0x10000 会在进行优化之前输出编译器编译后的操作码。
+
+设置为 0x20000 会输出优化后的操作码。
+
+#### opcache.preload
+
+默认值：`opcache.preload=`，指定一个PHP脚本进行预加载，可以在该PHP脚本文件中使用 `include()` 或者 `opcache_compile_file()` 函数来加载更多的文件。
+
+#### opcache.preload_user
+
+默认值：`opcache.preload_user=`，执行预加载的系统用户。
+
+#### opcache.file_update_protection
+
+默认值：`opcache.file_update_protection=2`
+
+距离文件最后的修改时间不足若干秒时，该文件将不执行缓存操作，避免修改或上传到一半的文件被缓存到内存中了。
+
+#### opcache.lockfile_path
+
+默认值：`opcache.lockfile_path=/tmp`，用来存储共享锁文件的绝对路径（仅适用于 *nix 操作系统）。
