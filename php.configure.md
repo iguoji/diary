@@ -248,7 +248,9 @@ PHP官网提供了相关资料 [https://www.php.net/manual/zh/features.dtrace.ph
 
 ## --with-zlib
 
-通常使用 `zlib` 包来开启网站的 `gzip` 压缩功能，但是 `Nginx` 都能处理了，这个没有必要了吧
+使用 `Composer` 安装各类PHP包的时候就会需要用到 `zlib` 模块
+
+也可以使用 `zlib` 包来开启网站的 `gzip` 压缩功能
 
 ## --enable-bcmath
 

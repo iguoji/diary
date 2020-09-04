@@ -31,6 +31,7 @@ export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig/
     --enable-pcntl \
     --without-pdo-sqlite \
     --with-pdo-mysql \
+    --with-zlib \
     --with-zlib-dir
 make && make install
 ```
