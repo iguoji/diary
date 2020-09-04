@@ -1,3 +1,5 @@
+[返回主页](../../../README.md)
+
 ## 有意思的
 
 + [precision](#precision)
@@ -32,6 +34,17 @@ memory_limit = 128M
 
 ; 不需要HTML格式的错误信息
 html_errors = Off
+
+; 开启OPcache
+opcache.enable = 1;
+opcache.enable_cli = 1;
+; 开启避免脚本名字冲突
+opcache.use_cwd = 1
+; 10秒更新一次缓存
+opcache.validate_timestamps = 1
+opcache.revalidate_freq = 10
+; 60秒重启一次
+opcache.force_restart_timeout = 60
 ```
 
 ## 配置选项

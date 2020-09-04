@@ -128,8 +128,7 @@ PATH=$PATH:$PHP/bin:$PHP/sbin
 # 导出变量
 export PATH
 
-# 重新加载环境变量，以便立即生效
-source /etc/profile
+# 重启后环境变量便生效、source /etc/profile 这种方式不再生效
 
 # php.ini
 cp /home/download/php-8.0.0beta2/php.ini-production /opt/php-8.0.0beta2/etc/php.ini
