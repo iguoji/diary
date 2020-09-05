@@ -57,6 +57,7 @@ If you can not modify the ini file, you can also run `php -d option=value` to mo
 
 ```bash
 # 意思是别用 `root` 用户来执行 `Composer` 的命令，这样存在风险
+# 但也可以将其忽视，这句话仅仅只是一个提示，并不会中断命令的执行
 Do not run Composer as root/super user! See https://getcomposer.org/root for details
 
 # 先添加一个用户

@@ -2,6 +2,25 @@
 
 ## Redis
 
+### 系统调优
+
+1. 编辑文件 `vi /etc/sysctl.conf`，追加或调整以下内容
+```bash
+net.core.somaxconn = 2048
+vm.overcommit_memory = 1
+```
+2. 重新加载文件以便生效 `sysctl -p`
+3. 临时执行，`echo never > /sys/kernel/mm/transparent_hugepage/enabled`
+4. 编辑文件 `vi /rc.local`，追加或调整以下内容，[源自Github](https://github.com/redis/redis/issues/3176)
+```bash
+if test -f /sys/kernel/mm/transparent_hugepage/enabled; then
+    echo never > /sys/kernel/mm/transparent_hugepage/enabled
+fi
+if test -f /sys/kernel/mm/transparent_hugepage/defrag; then
+    echo never > /sys/kernel/mm/transparent_hugepage/defrag
+fi
+```
+
 ### 编译安装
 ```bash
 # 进入下载目录
@@ -31,7 +50,6 @@ vi /opt/redis-6.0.7/redis.conf
 # 配置文件内容调整如下
 bind 192.168.2.12
 protected-mode no
-# 官方systemd有问题，暂时只能设置为no，当前日期：2020-09-04 17:35
 daemonize no
 supervised systemd
 requirepass 123456
@@ -44,13 +62,15 @@ REDIS=/opt/redis-6.0.7
 PATH=$PATH:$REDIS/bin
 
 # 重启后环境变量生效
+```
 
-# 设置Systemctl服务
-# 可以参考官方示例，就在源码包下
-# /home/download/redis-6.0.7.copy/utils/systemd-redis_server.service
-vi /usr/lib/systemd/system/redis.service
+### 系统服务
 
-# 追加或调整以下内容
+> 官方示例：/home/download/redis-6.0.7.copy/utils/systemd-redis_server.service
+
+1. 创建服务文件，`vi /usr/lib/systemd/system/redis.service`，内容如下
+
+```bash
 [Unit]
 Description=Redis data structure server
 Documentation=https://redis.io/documentation
@@ -60,35 +80,62 @@ Wants=network-online.target
 After=network-online.target
 
 [Service]
-# 服务类型
-Type=notify
-# 可打开文件数量
+#ExecStart=/opt/redis-6.0.7/bin/redis-server --supervised systemd --daemonize no
+## Alternatively, have redis-server load a configuration file:
+ExecStart=/opt/redis-6.0.7/bin/redis-server /opt/redis-6.0.7/redis.conf
 LimitNOFILE=10032
-# 防止子进程提权
 NoNewPrivileges=yes
-# 因内存不足而被关闭的优先级，可设为 -1000(禁止被杀死) 到 1000(最先被杀死)之间的整数值
-OOMScoreAdjust=-900
-# 私有的临时文件，不予其他进程共享临时文件
-PrivateTmp=yes
-# 允许启动所耗费的时间
+#OOMScoreAdjust=-900
+#PrivateTmp=yes
+Type=notify
 TimeoutStartSec=infinity
-# 允许停止所耗费的时间
 TimeoutStopSec=infinity
-# 文件创建掩码
 UMask=0077
-# 最终运行该程序的用户
 #User=redis
 #Group=redis
-# 工作目录
-#WorkingDirectory=/opt/redis-6.0.7
-# 启动命令
-ExecStart=/opt/redis-6.0.7/bin/redis-server /opt/redis-6.0.7/redis.conf
+#WorkingDirectory=/var/lib/redis
 
 [Install]
 WantedBy=multi-user.target
-
-# 重新加载Systemctl
-systemctl daemon-reload
 ```
 
-## 暂时到这里，太吵了
+2. 重新加载Systemd的服务文件 `systemctl daemon-reload`
+
+3. 开启服务 `systemctl start redis`
+
+4. 开机启动 `systemctl enable redis`
+
+## phpredis
+
+### 编译安装
+
+```bash
+# 进入下载目录
+cd /home/download
+
+# 下载redis
+curl -LO https://github.com/phpredis/phpredis/archive/5.3.1.tar.gz
+
+# 解压并进入目录
+tar -xf phpredis-5.3.1.tar.gz
+cd phpredis-5.3.1
+
+# 编译安装过
+phpize
+./configure
+make && make install
+
+# 编译失败，参考：https://github.com/phpredis/phpredis/issues/1809
+# 解决办法，从Github上重新下载 develop 版本，再次进行上面的步骤
+```
+
+### PHP开启redis扩展
+
+创建文件 `vi /opt/php-8.0.0beta3/etc/php.d/redis.ini`
+
+内容如下
+```bash
+[redis]
+extension=redis
+```
+然后通过 `php -m` 查看是否开启成功
