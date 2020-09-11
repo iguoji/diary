@@ -1,35 +1,8 @@
 [返回主页](../../../README.md)
 
-#### 软件源
+#### 系统调整
 
-```bash
-# 备份
-mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup
-# 使用阿里云的软件源
-curl -o /etc/yum.repos.d/CentOS-Base.repo https://mirrors.aliyun.com/repo/Centos-8.repo
-# 清除缓存
-dnf makecache
-```
-
-#### 防火墙
-
-```bash
-# 禁用防火墙
-systemctl stop firewalld
-systemctl disable firewalld
-```
-
-#### Selinux
-
-```bash
-# 临时关闭
-setenforce 0
-
-# 永久关闭
-vi /etc/selinux/config
-# 将SELINUX=enforcing改成，完了重启
-SELINUX=disabled
-```
+[点击查看](../../../linux/centos/centos8.md)
 
 #### PHP
 
