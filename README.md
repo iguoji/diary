@@ -3,6 +3,14 @@
 
 + [CentOS 8](linux/centos/centos8.md)
 
+# 2021
+
+## 2021.01
+
+### 2021.01.23
+
+ + [阿里云美国服务器Centos8通过Git编译安装部署PHP8.1/MariaDB/Redis环境](2021/01/23/aliyun.centos8.md)
+
 # 2020
 ## 2020.09
 
