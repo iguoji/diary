@@ -6,7 +6,7 @@
 # 安装git
 dnf install git -y
 # 编译工具
-dnf install -y bison autoconf automake libtool ccache libxml2-devel openssl-devel libcurl-devel libpng-devel libjpeg-devel freetype-devel gmp-devel gcc-c++
+dnf install -y bison autoconf automake libtool libxml2-devel openssl-devel libcurl-devel libpng-devel libjpeg-devel freetype-devel gmp-devel gcc-c++
 # 为php的mbstring模块安装oniguruma包
 cd /opt
 git clone https://github.com/kkos/oniguruma.git
@@ -33,6 +33,7 @@ cd /opt/php-src
 export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig/
 
 # 编译安装，可执行文件、配置文件和将放在 `/opt/php-master` 目录下
+make clean
 ./buildconf
 ./configure \
     --prefix=/opt/php-master \
@@ -117,6 +118,14 @@ gpgcheck=1
     * `Remove test database and access to it? [Y/n]` 是否删除测试数据库和账号，回车
     * `Reload privilege tables now? [Y/n]` 重新载入权限设置，回车
 
+4. 允许远程IP连接
+```sql
+# 授权
+grant all privileges on *.* to 'root'@'%' identified by '密码' with grant option;
+# 刷新权限
+flush privileges;
+```
+
 ## Redis
 
 ```
@@ -126,6 +135,7 @@ git clone https://github.com/redis/redis.git redis-src
 cd /opt/redis
 
 # 编译安装
+make clean
 dnf install systemd-devel
 make PREFIX=/opt/redis-master install
 
@@ -149,7 +159,7 @@ REDIS=/opt/redis
 PATH=$PATH:$REDIS/bin
 
 # :wq保存后重新登录ssh生效
-# 重新登录 `ssh` 后，输入 `redis -v`， 看到下列信息表示安装成功
+# 重新登录 `ssh` 后，输入 `redis-cli -v`， 看到下列信息表示安装成功
 redis-cli 255.255.255 (git:9c148310)
 
 # Systemctl 快捷服务
@@ -157,6 +167,7 @@ cp /opt/redis-src/utils/systemd-redis_server.service /usr/lib/systemd/system/red
 # 调整systemd服务文件，并将其中ExecStart调整成如下内容
 vi /usr/lib/systemd/system/redis.service
 ExecStart=/opt/redis/bin/redis-server /opt/redis/redis.conf
+
 # 重新加载Systemd的服务文件
 systemctl daemon-reload
 # 立即启动并设置开机自动启动 redis
@@ -173,6 +184,7 @@ git clone https://github.com/phpredis/phpredis.git
 cd /opt/phpredis
 
 # 编译安装
+phpize
 ./configure && make && make install
 
 # PHP开启redis扩展
@@ -219,4 +231,5 @@ dnf install -y nginx
 # 立即启动并设置开机自动启动
 systemctl start nginx
 systemctl enable nginx
+
 ```
